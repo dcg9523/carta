@@ -29,4 +29,131 @@
         /* Carta modo lectura: Aún más corta y compacta para celulares */
         .reading-mode .letter-container { 
             transform: translateY(0) scale(1); 
-            transition: all 0.8s cubic-bezier(
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            height: 55vh; /* Altura súper reducida */
+            max-height: 400px; /* Límite máximo para que sea un cuadro compacto */
+            width: 90vw; 
+            max-width: 500px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+        
+        .page { display: none; opacity: 0; transition: opacity 0.5s; }
+        .page.active { display: flex; opacity: 1; }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center relative bg-[#fcfcfc]">
+
+    <!-- Pantalla inicial: Sobre cerrado -->
+    <div id="envelope-scene" class="envelope-wrapper absolute z-50 flex flex-col items-center cursor-pointer w-full h-full justify-center" onclick="openEnvelope()">
+        <p class="mb-6 text-gray-500 tracking-widest uppercase text-sm animate-pulse">Toca el corazón para abrir</p>
+        <div class="envelope relative w-80 h-52 bg-white shadow-2xl rounded-sm border border-gray-100">
+            <div class="envelope-flap absolute top-0 left-0 w-0 h-0 border-l-[160px] border-r-[160px] border-t-[100px] border-transparent border-t-gray-100 z-30 drop-shadow-sm pointer-events-none"></div>
+            <div class="heart-seal absolute top-[75px] w-full flex justify-center z-40 text-red-500 text-5xl drop-shadow-md">
+                ❤️
+            </div>
+            <div class="absolute inset-0 border-l-[160px] border-r-[160px] border-b-[110px] border-transparent border-b-white border-l-gray-50 border-r-gray-50 z-20 pointer-events-none"></div>
+        </div>
+    </div>
+
+    <!-- Carta que sale del sobre -->
+    <div id="letter" class="letter-container absolute bg-white w-72 h-72 p-5 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100 mb-12">
+        
+        <!-- Contenido dinámico de las páginas -->
+        <div id="pages-container" class="flex-grow flex flex-col justify-start text-gray-700 text-[14px] leading-relaxed relative overflow-hidden overflow-y-auto mb-2">
+            <!-- Las páginas se insertan aquí vía JS -->
+        </div>
+
+        <!-- Controles de navegación protegidos del fondo -->
+        <div id="controls" class="hidden mt-2 justify-between items-center border-t border-gray-100 pt-3 pb-1 flex-shrink-0 bg-white">
+            <button onclick="prevPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">&larr; Anterior</button>
+            <span id="page-indicator" class="text-xs text-gray-300 font-bold">1 / 10</span>
+            <button onclick="nextPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">Siguiente &rarr;</button>
+        </div>
+    </div>
+
+    <script>
+        // Texto dividido en 10 páginas cortas
+        const pages = [
+            `<strong>Manu &lt;3,</strong><br><br>Sabes que puedo ser mejor con las letras que con el verbo. Ayer te sentí distante y como que no querías contarme nada más de tu vida.<br><br>Llevo escribiendo esto 5 días en mi cabeza, tratando de poner todos mis pensamientos en un mensaje directo para poder expresar lo que siento por ti, y trataré de hacerlo de la manera más honesta posible.`,
+            
+            `Si llegas aquí y definitivamente durante estos días has pensado que no soy una persona que quieras en tu vida, lo entiendo; reacciona a este mensaje con un corazón negro, lo entenderé y me haré a un lado.<br><br>Si decides no reaccionar con el corazón negro, esto es lo que te quiero decir: Creo que hace ya 5 años no pasaba días tan grises; mi cabeza a 1000 revoluciones, la sensación de que algo me falta...`,
+            
+            `Cuando me dices que estás bien me alegro de corazón porque no quiero menos para ti, pero mi corazón duele de solo pensar que tal vez ya estés creando un mecanismo para olvidarme a pasos agigantados...<br><br>Cuando hablaste el miércoles en pasado: “me imaginé, sí quería, mis planes eran…”, eso me devastó. Pero yo sí te lo quiero decir: NO QUIERO TENERTE LEJOS UN SEGUNDO MÁS.`,
+            
+            `Tampoco quiero esperar a que una vida contigo sea el sueño o la oportunidad de alguien más, porque ya estoy aquí.<br><br>Yo sé que la cagué y que tengo tanto por mejorar, pero yo no quiero hablar en pasado. Yo sí quiero comprar un apto, pero vivir contigo; yo sí quiero un carro para pasear y disfrutar contigo; yo sí quiero tener a Alicia, pero contigo.`,
+            
+            `Sí quiero despertar cada mañana y ver esa carita preciosa que tienes, verte estirar y lanzarme esa sonrisa pícara que tienes mientras me dices "buenos días, amorcito"; sí quiero ver ese espectacular cabello multicolor y esos ojos cafés intensos diariamente.<br><br>Sí quiero hacerte el amor todos los días, sí quiero que me toques cuando mis vecinos nos están mirando...`,
+            
+            `Sí quiero ir a la tienda tomando tu mano y escuchar “amorcito, me porté muy bien hoy y creo que me merezco un dulcecito”. Sí quiero escribir más páginas en tu libreta, sí quiero que me mandes reels imaginándonos una vida juntos.<br><br>Sí quiero ser la persona a la que acudas cuando estás feliz o triste; sí quiero admirar tu nariz, tu rostro, tu cabello, tu ser.`,
+            
+            `Sí quiero ser la persona con la cual disfrutas hablar, reír, bailar, ir al supermercado, ir a un concierto, o simplemente estar cerca sin hablar. Sí quiero ser tu amorcete, tu cielo, tu mejor amigo, tu novio, tu esposo... El amor de tu vida.<br><br>Sé que te hice daño con mi falta de comunicación, desconfianza y celos, pero durante estos días me he dado cuenta de que puedo, quiero y voy a cambiar.`,
+            
+            `No quiero mi felicidad ni tu felicidad por separado, quiero que todo sea nuestra felicidad, y que no nos preguntemos más "¿qué somos?". Me cansé de sentir temor, distancias y silencios innecesarios.<br><br>Yo lo que quiero es apostarlo todo aquí y ahora. Así tu familia diga que soy un tonto por haber hecho lo que hice, yo quiero estar contigo y solo contigo.`,
+            
+            `Cada "te amo", cada "te admiro", cada "estás preciosa", han sido desde mi total honestidad y amor. Ayer salí y cada lugar que recorrí solo podía imaginármelo contigo; comí ramen y te quería a mi lado... Y mi corazón se acelera porque en verdad quiere que tú pienses lo mismo.<br><br>Quiero estar a tu lado desde el respeto, la reciprocidad, la confianza y la claridad.`,
+            
+            `Manuela Ríos, te amo demasiado. Esta semana me diagnostiqué y soy alejado-de-Manuela-fóbico; y eres la cura para mi alma, eso ya lo entendí. No me tienes que dar una respuesta inmediata, pero sí quiero saber lo que pasa por tu mente cuando estés lista.<br><br><span class="text-red-500 font-bold text-center block my-4 cursive text-lg sm:text-xl leading-tight">TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO</span><br>Y si llegaste hasta aquí, eres el amor de mi vida.`
+        ];
+
+        let currentPage = 0;
+
+        function renderPages() {
+            const container = document.getElementById('pages-container');
+            container.innerHTML = pages.map((text, index) => 
+                `<div class="page flex-col h-full ${index === 0 ? 'active' : ''}" id="page-${index}">
+                    <p class="mt-0 mb-auto whitespace-pre-line">${text}</p>
+                </div>`
+            ).join('');
+            updateControls();
+        }
+
+        function openEnvelope() {
+            if(document.body.classList.contains('open')) return; 
+            
+            document.body.classList.add('open');
+            setTimeout(() => {
+                document.body.classList.add('reading-mode');
+                document.getElementById('controls').classList.remove('hidden');
+                document.getElementById('controls').classList.add('flex');
+            }, 1800);
+        }
+
+        function updateControls() {
+            document.querySelectorAll('.page').forEach((p, i) => {
+                p.classList.toggle('active', i === currentPage);
+                if (i === currentPage) document.getElementById('pages-container').scrollTop = 0;
+            });
+            document.getElementById('page-indicator').innerText = `${currentPage + 1} / ${pages.length}`;
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateControls();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                updateControls();
+            }
+        }
+
+        let touchStartX = 0;
+        const letterElem = document.getElementById('letter');
+        
+        letterElem.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+        
+        letterElem.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 40) nextPage();
+            if (touchEndX - touchStartX > 40) prevPage();
+        }, {passive: true});
+
+        renderPages();
+    </script>
+</body>
+</html>
