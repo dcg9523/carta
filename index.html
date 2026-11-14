@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Ajuste clave para celulares -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Para Manu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
@@ -16,7 +17,7 @@
         .envelope-flap { transform-origin: top; transition: transform 0.8s ease-in-out; }
         
         .open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
-        .open .letter-container { transform: translateY(-100px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
+        .open .letter-container { transform: translateY(-80px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
         .open .envelope-wrapper { transform: translateY(150px); opacity: 0; pointer-events: none; transition: transform 1s ease-in-out 1.5s, opacity 1s 1.5s; }
         
         /* Animación del corazón latiendo */
@@ -26,8 +27,9 @@
         }
         .heart-seal { animation: heartbeat 2s infinite ease-in-out; cursor: pointer; }
         
-        /* Carta modo lectura */
-        .reading-mode .letter-container { transform: translateY(0) scale(1.05); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); height: 85vh; width: 90vw; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        /* Carta modo lectura (Ajuste de altura para que Safari no tape los botones) */
+        .reading-mode .letter-container { transform: translateY(0) scale(1); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); height: 72vh; width: 90vw; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        
         .page { display: none; opacity: 0; transition: opacity 0.5s; }
         .page.active { display: flex; opacity: 1; }
     </style>
@@ -50,18 +52,18 @@
     </div>
 
     <!-- Carta que sale del sobre -->
-    <div id="letter" class="letter-container absolute bg-white w-72 h-96 p-6 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100">
+    <div id="letter" class="letter-container absolute bg-white w-72 h-96 p-5 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100 mb-8">
         
         <!-- Contenido dinámico de las páginas -->
-        <div id="pages-container" class="flex-grow flex flex-col justify-center text-gray-700 text-[14px] leading-relaxed relative overflow-hidden">
+        <div id="pages-container" class="flex-grow flex flex-col justify-start text-gray-700 text-[14px] leading-relaxed relative overflow-hidden overflow-y-auto mb-2">
             <!-- Las páginas se insertan aquí vía JS -->
         </div>
 
-        <!-- Controles de navegación -->
-        <div id="controls" class="hidden mt-4 justify-between items-center border-t border-gray-100 pt-4">
-            <button onclick="prevPage()" class="text-gray-400 hover:text-red-500 px-3 py-1 font-semibold transition text-sm">&larr; Anterior</button>
-            <span id="page-indicator" class="text-xs text-gray-300">1 / 5</span>
-            <button onclick="nextPage()" class="text-gray-400 hover:text-red-500 px-3 py-1 font-semibold transition text-sm">Siguiente &rarr;</button>
+        <!-- Controles de navegación protegidos del fondo -->
+        <div id="controls" class="hidden mt-2 justify-between items-center border-t border-gray-100 pt-3 pb-1 flex-shrink-0 bg-white">
+            <button onclick="prevPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">&larr; Anterior</button>
+            <span id="page-indicator" class="text-xs text-gray-300 font-bold">1 / 5</span>
+            <button onclick="nextPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">Siguiente &rarr;</button>
         </div>
     </div>
 
@@ -83,15 +85,14 @@
         function renderPages() {
             const container = document.getElementById('pages-container');
             container.innerHTML = pages.map((text, index) => 
-                `<div class="page flex-col h-full overflow-y-auto ${index === 0 ? 'active' : ''}" id="page-${index}">
-                    <p class="my-auto whitespace-pre-line">${text}</p>
+                `<div class="page flex-col h-full ${index === 0 ? 'active' : ''}" id="page-${index}">
+                    <p class="mt-0 mb-auto whitespace-pre-line">${text}</p>
                 </div>`
             ).join('');
             updateControls();
         }
 
         function openEnvelope() {
-            // Evitar que se active más de una vez
             if(document.body.classList.contains('open')) return; 
             
             document.body.classList.add('open');
@@ -105,7 +106,7 @@
         function updateControls() {
             document.querySelectorAll('.page').forEach((p, i) => {
                 p.classList.toggle('active', i === currentPage);
-                if (i === currentPage) p.scrollTop = 0;
+                if (i === currentPage) document.getElementById('pages-container').scrollTop = 0;
             });
             document.getElementById('page-indicator').innerText = `${currentPage + 1} / ${pages.length}`;
         }
@@ -134,8 +135,8 @@
         
         letterElem.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) nextPage(); // Swipe izquierda
-            if (touchEndX - touchStartX > 50) prevPage(); // Swipe derecha
+            if (touchStartX - touchEndX > 40) nextPage(); // Swipe izquierda
+            if (touchEndX - touchStartX > 40) prevPage(); // Swipe derecha
         }, {passive: true});
 
         renderPages();
