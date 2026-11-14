@@ -2,429 +2,143 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Una Carta para Ti</title>
-    
-    <!-- Tailwind CSS for layout and basic styling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Manu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts for elegant typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --env-width: 300px;
-            --env-height: 200px;
-        }
-
-        body {
-            font-family: 'Playfair Display', serif;
-            /* Animación suave de fondo simulando el mar */
-            background: linear-gradient(270deg, #0f172a, #0369a1, #0891b2, #0c4a6e);
-            background-size: 800% 800%;
-            animation: oceanWaves 18s ease infinite;
-            overflow-x: hidden;
-            touch-action: pan-y;
-        }
-
-        @keyframes oceanWaves {
-            0% { background-position: 0% 50% }
-            50% { background-position: 100% 50% }
-            100% { background-position: 0% 50% }
-        }
-
-        .handwriting {
-            font-family: 'Dancing Script', cursive;
-        }
-
-        /* Contenedor del sobre con perspectiva 3D */
-        .envelope-wrapper {
-            position: relative;
-            width: var(--env-width);
-            height: var(--env-height);
-            margin: 0 auto;
-            perspective: 1000px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
+        body { font-family: 'Lora', serif; background-color: #fcfcfc; overflow: hidden; margin: 0; padding: 0; }
+        .cursive { font-family: 'Dancing Script', cursive; }
         
-        .envelope-wrapper:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Parte trasera del sobre (fondo azul oscuro) */
-        .envelope-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0c4a6e;
-            border-radius: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            z-index: 1;
-        }
-
-        /* La carta pequeña que asoma (color arena/beige) */
-        .letter-peek {
-            position: absolute;
-            bottom: 10px;
-            left: 15px;
-            right: 15px;
-            height: 170px;
-            background: #fdf8f0;
-            border-radius: 5px;
-            z-index: 2;
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Animación cuando el sobre se abre (La carta sube) */
-        .is-open .letter-peek {
-            transform: translateY(-120px);
-        }
-
-        /* Bolsillos frontales del sobre formados por bordes CSS (Tonos oceánicos) */
-        .envelope-pockets {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .pocket-left {
-            position: absolute; top: 0; left: 0;
-            border-top: 100px solid transparent;
-            border-bottom: 100px solid transparent;
-            border-left: 150px solid #0369a1; /* sky-700 */
-        }
-
-        .pocket-right {
-            position: absolute; top: 0; right: 0;
-            border-top: 100px solid transparent;
-            border-bottom: 100px solid transparent;
-            border-right: 150px solid #0284c7; /* sky-600 */
-        }
-
-        .pocket-bottom {
-            position: absolute; bottom: 0; left: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-bottom: 110px solid #075985; /* sky-800 */
-        }
-
-        /* La solapa del sobre (arriba) */
-        .envelope-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 120px solid #0ea5e9; /* sky-500 */
-            transform-origin: top;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 4;
-            pointer-events: none;
-        }
-
-        /* Animación: Solapa girando hacia atrás en 3D */
-        .is-open .envelope-flap {
-            transform: rotateX(180deg);
-            z-index: 1; /* Se va detrás de la carta al abrirse */
-        }
-
-        /* Sello de Cera (Estilo Concha Nacarada) */
-        .wax-seal {
-            position: absolute;
-            top: 100px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            border-radius: 50%;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 0 8px rgba(255,255,255,0.9);
-            border: 2px solid #cbd5e1;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
+        /* Animaciones del sobre */
+        .envelope-wrapper { perspective: 1000px; transition: transform 0.8s ease-in-out; }
+        .envelope { transition: transform 1s ease-in-out; transform-style: preserve-3d; }
+        .envelope-flap { transform-origin: top; transition: transform 0.8s ease-in-out; }
         
-        .is-open .wax-seal {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.5);
-        }
-
-        /* Vistas (Transición de sobre a carta en pantalla completa) */
-        #intro-view {
-            transition: opacity 1s ease, transform 1s ease;
-        }
+        .open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+        .open .letter-container { transform: translateY(-100px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
+        .open .envelope-wrapper { transform: translateY(150px); opacity: 0; pointer-events: none; transition: transform 1s ease-in-out 1.5s, opacity 1s 1.5s; }
         
-        .fade-out {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.95);
+        /* Animación del corazón latiendo */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
-
-        #reading-view {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1s ease 0.5s;
-        }
-
-        .fade-in {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-
-        /* Decoraciones de la carta de lectura (Esquinas aguamarina) */
-        .corner-tl { position: absolute; top: 0; left: 0; width: 40px; height: 40px; border-top: 3px solid #06b6d4; border-left: 3px solid #06b6d4; margin: 15px; border-top-left-radius: 8px;}
-        .corner-br { position: absolute; bottom: 0; right: 0; width: 40px; height: 40px; border-bottom: 3px solid #06b6d4; border-right: 3px solid #06b6d4; margin: 15px; border-bottom-right-radius: 8px;}
-
-        /* Animación suave para el cambio de páginas de texto */
-        #page-content {
-            transition: opacity 0.3s ease;
-        }
-
-        /* Burbujas flotantes de fondo */
-        .floating-bubble {
-            position: fixed;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            user-select: none;
-            pointer-events: none;
-            animation: float-up linear infinite;
-            z-index: -1;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
-        }
+        .heart-seal { animation: heartbeat 2s infinite ease-in-out; cursor: pointer; }
         
-        @keyframes float-up {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-        }
-        
-        /* Animación del texto inicial */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .animate-pulse-slow {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
+        /* Carta modo lectura */
+        .reading-mode .letter-container { transform: translateY(0) scale(1.05); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); height: 85vh; width: 90vw; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .page { display: none; opacity: 0; transition: opacity 0.5s; }
+        .page.active { display: flex; opacity: 1; }
     </style>
 </head>
-<body class="min-h-screen w-full relative">
+<body class="h-screen w-screen flex items-center justify-center relative bg-[#fcfcfc]">
 
-    <!-- Fondo dinámico con burbujas (Generadas por JS) -->
-    <div id="bubbles-container"></div>
-
-    <!-- PANTALLA 1: EL SOBRE -->
-    <div id="intro-view" class="fixed inset-0 flex flex-col items-center justify-center p-4 z-10">
-        
-        <div id="envelope" class="envelope-wrapper">
-            <div class="envelope-back"></div>
-            
-            <!-- Carta asomando -->
-            <div class="letter-peek">
-                <div class="w-3/4 h-2 bg-cyan-900/10 mb-3 rounded"></div>
-                <div class="w-1/2 h-2 bg-cyan-900/10 mb-4 rounded"></div>
-                <div class="handwriting text-cyan-800 text-2xl">Para ti... 🌊</div>
+    <!-- Pantalla inicial: Sobre cerrado -->
+    <div id="envelope-scene" class="envelope-wrapper absolute z-50 flex flex-col items-center cursor-pointer w-full h-full justify-center" onclick="openEnvelope()">
+        <p class="mb-6 text-gray-500 tracking-widest uppercase text-sm animate-pulse">Toca el corazón para abrir</p>
+        <div class="envelope relative w-80 h-52 bg-white shadow-2xl rounded-sm border border-gray-100">
+            <!-- Solapa superior -->
+            <div class="envelope-flap absolute top-0 left-0 w-0 h-0 border-l-[160px] border-r-[160px] border-t-[100px] border-transparent border-t-gray-100 z-30 drop-shadow-sm pointer-events-none"></div>
+            <!-- Sello de corazón -->
+            <div class="heart-seal absolute top-[75px] w-full flex justify-center z-40 text-red-500 text-5xl drop-shadow-md">
+                ❤️
             </div>
-            
-            <div class="envelope-pockets">
-                <div class="pocket-left"></div>
-                <div class="pocket-right"></div>
-                <div class="pocket-bottom"></div>
-            </div>
-            
-            <div class="envelope-flap"></div>
-            
-            <!-- Sello Nacarado -->
-            <div class="wax-seal">
-                <span class="text-xl">🐚</span>
-            </div>
+            <!-- Solapas laterales e inferior -->
+            <div class="absolute inset-0 border-l-[160px] border-r-[160px] border-b-[110px] border-transparent border-b-white border-l-gray-50 border-r-gray-50 z-20 pointer-events-none"></div>
         </div>
-
-        <p class="mt-12 text-cyan-100 font-medium tracking-wide animate-pulse-slow drop-shadow-md">Toca el sobre para abrir</p>
     </div>
 
-    <!-- PANTALLA 2: LA CARTA ABIERTA (Multíple página) -->
-    <div id="reading-view" class="fixed inset-0 flex items-center justify-center p-4 sm:p-6 z-20 overflow-hidden">
-        <!-- Papel color arena -->
-        <div class="bg-[#fdf8f0]/95 backdrop-blur-md w-full max-w-lg h-[80vh] max-h-[600px] rounded-2xl shadow-2xl relative flex flex-col p-6 sm:p-10 border border-cyan-100">
-            
-            <!-- Detalles en esquinas -->
-            <div class="corner-tl"></div>
-            <div class="corner-br"></div>
+    <!-- Carta que sale del sobre -->
+    <div id="letter" class="letter-container absolute bg-white w-72 h-96 p-6 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100">
+        
+        <!-- Contenido dinámico de las páginas -->
+        <div id="pages-container" class="flex-grow flex flex-col justify-center text-gray-700 text-[14px] leading-relaxed relative overflow-hidden">
+            <!-- Las páginas se insertan aquí vía JS -->
+        </div>
 
-            <!-- Contenido de la carta -->
-            <div class="flex-grow flex items-center justify-center overflow-y-auto custom-scrollbar">
-                <div id="page-content" class="text-cyan-950 text-lg sm:text-xl leading-relaxed text-center px-2">
-                    <!-- El JS inyectará el texto aquí -->
-                </div>
-            </div>
-
-            <!-- Controles de Navegación -->
-            <div class="mt-6 flex justify-between items-center z-10 pt-4 border-t border-cyan-900/10">
-                <button id="prev-btn" class="px-4 py-2 bg-cyan-50 text-cyan-800 rounded-full shadow-sm border border-cyan-200 hover:bg-cyan-100 transition-colors disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center gap-2">
-                    <span>&larr;</span> <span class="hidden sm:inline">Anterior</span>
-                </button>
-                
-                <span id="page-indicator" class="text-sm font-medium text-cyan-600">1 / 5</span>
-                
-                <button id="next-btn" class="px-4 py-2 bg-cyan-50 text-cyan-800 rounded-full shadow-sm border border-cyan-200 hover:bg-cyan-100 transition-colors disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center gap-2">
-                    <span class="hidden sm:inline">Siguiente</span> <span>&rarr;</span>
-                </button>
-            </div>
-            
-            <!-- Hint de Swipe para móviles -->
-            <p class="text-center text-xs text-cyan-700/50 mt-3 sm:hidden">Desliza para cambiar de página</p>
+        <!-- Controles de navegación -->
+        <div id="controls" class="hidden mt-4 justify-between items-center border-t border-gray-100 pt-4">
+            <button onclick="prevPage()" class="text-gray-400 hover:text-red-500 px-3 py-1 font-semibold transition text-sm">&larr; Anterior</button>
+            <span id="page-indicator" class="text-xs text-gray-300">1 / 5</span>
+            <button onclick="nextPage()" class="text-gray-400 hover:text-red-500 px-3 py-1 font-semibold transition text-sm">Siguiente &rarr;</button>
         </div>
     </div>
 
     <script>
-        // --- TEXTOS DE LA CARTA (PÁGINAS) ---
-        const letterPages = [
-            "<span class='handwriting text-3xl text-cyan-800 block mb-6 font-bold'>Amor y mejor amiga mía,</span> Perdón si a veces no soy el mejor con las palabras. Tienes razón cuando dices que puedo llegar a ser muy individualista, egoísta, quizás intenso o celoso también. Podría echarle la culpa al amor tan grande que siento por ti, porque de verdad nunca había sentido algo así por nadie y hay muchas cosas nuevas para mí. Pero algo tan bonito no se merece que le ponga de excusa.",
-            "Sé que tengo muchas cosas que mejorar y en serio quiero hacerlo. Porque ahora mismo no hay nada que quiera más que vivir un amor bonito contigo. Se me llena el pecho de felicidad solo de verte, tocarte, besarte, escucharte cantar o reír. Me encanta ir de tu mano y acompañarte en las cosas que te importan, como estar con tu gente o verte entrar a la maestría que tanto quieres.",
-            "No quiero perderte, para nada. Al revés, quiero hacer todo lo que esté en mis manos para enamorarte cada día más y que te sientas segura conmigo. Quiero que sigas teniendo días y noches increíbles conmigo de puente, que veas un mensaje mío y te llene de alegría, que tengamos ganas de vivir, de viajar, de crecer y de abrazar a Alicia juntos. Y ojalá ser la persona con la que quieras estar el resto de la vida.",
-            "No te puedo prometer que no te voy a hacer enojar nunca más o que todo será perfecto y sin temas por hablar. Pero sí te prometo que jamás te voy a tratar mal, que nunca voy a pensar mal de ti, que no tendré ojos para nadie más, que seré tu apoyo cuando me necesites. Yo siempre te voy a hablar con la verdad para aclarar cualquier duda, porque mi meta principal es poder darte paz y felicidad.",
-            "<span class='handwriting text-5xl text-cyan-700 block mb-8 text-center drop-shadow-sm font-bold'>Te amo muchísimo.</span> <div class='text-center mt-4'>No hay un solo día en estos dos meses, desde aquél 28 de agosto, que no dé las gracias al universo por habernos cruzado.</div>"
+        const pages = [
+            `<strong>Manu &lt;3,</strong><br><br>Sabes que puedo ser mejor con las letras que con el verbo. Ayer te sentí distante y como que no querías contarme nada más de tu vida. Llevo escribiendo esto 5 días en mi cabeza, tratando de poner todos mis pensamientos en un mensaje directo para poder expresar lo que siento por ti, y trataré de hacerlo de la manera más honesta posible.<br><br>Si llegas aquí y definitivamente durante estos días has pensado que no soy una persona que quieras en tu vida, lo entiendo; reacciona a este mensaje con un corazón negro, lo entenderé y me haré a un lado.<br><br>Si decides no reaccionar con el corazón negro, esto es lo que te quiero decir: Creo que hace ya 5 años no pasaba días tan grises; mi cabeza a 1000 revoluciones, la sensación de que algo me falta, la incertidumbre y muchas otras cosas que no son el foco de esto, pero ahí están.<br><br>Cuando me dices que estás bien me alegro de corazón porque no quiero menos para ti, pero mi corazón duele de solo pensar que tal vez ya estés creando un mecanismo para olvidarme a pasos agigantados, o que en este tiempo te dieras cuenta de que no soy la persona que quieres a tu lado (lo cual puede ser posible, porque eres más de acciones y nunca me dijiste que no querías que me fuera). Cuando hablaste el miércoles en pasado: “me imaginé, sí quería, mis planes eran…”, eso me devastó. Pero yo sí te lo quiero decir: NO QUIERO TENERTE LEJOS UN SEGUNDO MÁS, y tampoco quiero esperar a que una vida contigo sea el sueño o la oportunidad de alguien más, porque ya estoy aquí.`,
+            
+            `Yo sé que la cagué y que tengo tanto por mejorar, pero yo no quiero hablar en pasado. Yo sí quiero comprar un apto, pero vivir contigo; yo sí quiero un carro para pasear y disfrutar contigo; yo sí quiero tener a Alicia, pero contigo; sí quiero ser exitoso y rico para compartir todo contigo; sí quiero despertar cada mañana y ver esa carita preciosa que tienes, verte estirar y lanzarme esa sonrisa pícara que tienes mientras me dices "buenos días, amorcito"; sí quiero ver ese espectacular cabello multicolor y esos ojos cafés intensos diariamente, por los cuales los míos se inundan de amor.<br><br>Sí quiero hacerte el amor todos los días, sí quiero que me toques cuando mis vecinos nos están mirando, sí quiero ir a la tienda tomando tu mano y escuchar “amorcito, me porté muy bien hoy y creo que me merezco un dulcecito” mientras me haces un puchero. Sí quiero escribir más páginas en tu libreta de apuntes, sí quiero que me mandes reels de Instagram divertidos y lindos imaginándonos una vida juntos. Sí quiero ser la persona a la que acudas cuando estás feliz o triste; sí quiero poder abrir mis ojos y admirar tu nariz, tu rostro, tus cejas, tu cabello, tu piel, tus labios, tus senos, tus nalgas, tu ser.<br><br>Sí quiero ser la persona con la cual disfrutas hablar, reír, bailar, ir al supermercado, ir a un concierto, comer, o simplemente estar cerca sin hablar, y con la que te sientes segura. Sí quiero ser tu amorcete, tu cielo, tu mejor amigo, tu novio, tu esposo, tu confidente en los días malos y buenos, y si llegaste hasta aquí y me permites ser pretencioso y egoísta… El amor de tu vida.`,
+            
+            `Sé que te hice daño de alguna manera con mis obsesiones y por mi falta de comunicación y carácter, por mi desconfianza y mis celos; que no puedo prometer que no vaya a ser celoso nunca, o que no me vayan a molestar actitudes y palabras, que no me va a molestar que haya gente del pasado cerca, o que desconfíe de las intenciones de otras personas (pero nunca de las tuyas). Pero estas son cosas que están conmigo, y durante estos días me he dado cuenta de que puedo, quiero y voy a cambiar, porque para mí eres la persona más valiosa que he podido encontrar en todos mis años en búsqueda de mi amor bonito (yo sé que soy muy cursi a veces).<br><br>Sí, hablaré, preguntaré y me expresaré en los momentos correctos; y si tú llegaste hasta este punto, son cosas que, si decides no abandonar el barco, las podemos hablar todas.<br><br>No quiero mi felicidad ni tu felicidad por separado, quiero que todo sea nuestra felicidad, y que cuando las cosas se pongan complejas no nos preguntemos nunca más "¿qué somos?", porque la única respuesta a eso espero que sea esa: somos. No quiero que pienses solo en mí, quiero que pienses en ti y en nosotros. Me cansé de sentir temor, me cansé de fingir espacios, distancias y silencios innecesarios. Yo lo que quiero es apostarlo todo aquí y ahora; así Valentina me esté odiando, así Daniel me esté odiando, así tu familia diga que soy un tonto por haber hecho lo que hice, yo quiero estar contigo y solo contigo, lo demás lo arreglo después.`,
+            
+            `Cada "te amo", cada "te admiro", cada "estás preciosa", cada "no me interesa nadie más", cada "¿estás bien?", cada "¿ya comiste?", cada "¿pediste la cita?", cada "no" necesario, cada "¿y si haces esto?" han sido desde mi total honestidad y amor. Yo no pretendo controlar tu vida, ni tus finanzas, ni nada; yo lo único que quiero es estar para hacerte la vida más sencilla si está a mi alcance.<br><br>Ayer salí y cada lugar que recorrí solo podía imaginármelo contigo; comí ramen y te quería a mi lado; fui a un lugar espectacular al que quisiera ir contigo; hablé con mis amigos de ti, de lo mucho que te extraño y de lo mucho que quiero estar contigo… Y mi corazón se acelera porque en verdad quiere que tú pienses lo mismo.<br><br>Yo creo que la intención de esta cuarta carta que te he escrito está clara, y tengo muchas más letras que quiero compartir, pero en el transcurso de la vida. Quiero estar a tu lado desde el respeto, el amor, la reciprocidad, la confianza y la claridad. Pero todo esto solo son mis palabras, quisiera conocer las tuyas, lo que no tiene que ser ya, pero si a esto reaccionas con un corazón blanco, entenderé que al menos quieres pensarlo; o si me contestas con un “sí, lo quiero pensar”, también me ayuda a saber qué debo hacer.`,
+            
+            `Manuela Ríos, te amo demasiado, no te alcanzas a imaginar cuánto… Esta semana me diagnostiqué y soy alejado-de-Manuela-fóbico, creo que ese es el término médico; y eres la cura para mi alma, eso ya lo entendí. Como dije, no me tienes que dar una respuesta inmediata, pero sí quiero saber lo que pasa por tu mente cuando quieras decírmelo y estés lista.<br><br><span class="text-red-500 font-bold text-center block my-4 cursive text-xl sm:text-2xl leading-tight">TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO</span><br>Y si llegaste hasta aquí, eres el amor de mi vida y gracias por leerme.`
         ];
 
-        // --- VARIABLES DE ESTADO ---
         let currentPage = 0;
-        let isOpened = false;
 
-        // --- ELEMENTOS DEL DOM ---
-        const envelope = document.getElementById('envelope');
-        const introView = document.getElementById('intro-view');
-        const readingView = document.getElementById('reading-view');
-        
-        const contentDiv = document.getElementById('page-content');
-        const pageIndicator = document.getElementById('page-indicator');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-
-        // --- LÓGICA DEL SOBRE ---
-        envelope.addEventListener('click', () => {
-            if (isOpened) return; // Evitar multiples clicks
-            isOpened = true;
-            
-            // 1. Añade clase para activar animaciones CSS de la solapa y la carta
-            envelope.classList.add('is-open');
-
-            // 2. Espera a que termine la animación para pasar a la lectura
-            setTimeout(() => {
-                introView.classList.add('fade-out');
-                readingView.classList.add('fade-in');
-                updatePage(); // Cargar la primera página
-            }, 1800);
-        });
-
-        // --- LÓGICA DE LAS PÁGINAS ---
-        function updatePage() {
-            // Animación suave (fade out -> cambiar contenido -> fade in)
-            contentDiv.style.opacity = 0;
-            
-            setTimeout(() => {
-                // Inyectar HTML
-                contentDiv.innerHTML = letterPages[currentPage];
-                // Actualizar indicador
-                pageIndicator.innerText = `${currentPage + 1} / ${letterPages.length}`;
-                
-                // Habilitar/Deshabilitar botones
-                prevBtn.disabled = currentPage === 0;
-                nextBtn.disabled = currentPage === letterPages.length - 1;
-                
-                contentDiv.style.opacity = 1;
-            }, 300);
+        function renderPages() {
+            const container = document.getElementById('pages-container');
+            container.innerHTML = pages.map((text, index) => 
+                `<div class="page flex-col h-full overflow-y-auto ${index === 0 ? 'active' : ''}" id="page-${index}">
+                    <p class="my-auto whitespace-pre-line">${text}</p>
+                </div>`
+            ).join('');
+            updateControls();
         }
 
-        prevBtn.addEventListener('click', () => {
+        function openEnvelope() {
+            // Evitar que se active más de una vez
+            if(document.body.classList.contains('open')) return; 
+            
+            document.body.classList.add('open');
+            setTimeout(() => {
+                document.body.classList.add('reading-mode');
+                document.getElementById('controls').classList.remove('hidden');
+                document.getElementById('controls').classList.add('flex');
+            }, 1800);
+        }
+
+        function updateControls() {
+            document.querySelectorAll('.page').forEach((p, i) => {
+                p.classList.toggle('active', i === currentPage);
+                if (i === currentPage) p.scrollTop = 0;
+            });
+            document.getElementById('page-indicator').innerText = `${currentPage + 1} / ${pages.length}`;
+        }
+
+        function prevPage() {
             if (currentPage > 0) {
                 currentPage--;
-                updatePage();
+                updateControls();
             }
-        });
+        }
 
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < letterPages.length - 1) {
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
                 currentPage++;
-                updatePage();
+                updateControls();
             }
-        });
+        }
 
-        // --- SOPORTE PARA SWIPE EN MÓVILES ---
+        // Permitir deslizar con el dedo
         let touchStartX = 0;
-        let touchEndX = 0;
+        const letterElem = document.getElementById('letter');
         
-        readingView.addEventListener('touchstart', e => {
+        letterElem.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
         }, {passive: true});
-
-        readingView.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+        
+        letterElem.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) nextPage(); // Swipe izquierda
+            if (touchEndX - touchStartX > 50) prevPage(); // Swipe derecha
         }, {passive: true});
 
-        function handleSwipe() {
-            const swipeThreshold = 50; // Pixeles mínimos para considerar swipe
-            if (touchEndX < touchStartX - swipeThreshold) {
-                // Swipe a la izquierda (Siguiente)
-                if (currentPage < letterPages.length - 1) {
-                    currentPage++;
-                    updatePage();
-                }
-            }
-            if (touchEndX > touchStartX + swipeThreshold) {
-                // Swipe a la derecha (Anterior)
-                if (currentPage > 0) {
-                    currentPage--;
-                    updatePage();
-                }
-            }
-        }
-
-        // --- GENERADOR DE BURBUJAS FLOTANTES DE FONDO ---
-        function createBubbles() {
-            const container = document.getElementById('bubbles-container');
-            const bubbleCount = 20; // Número de burbujas simultáneas
-            
-            for (let i = 0; i < bubbleCount; i++) {
-                let bubble = document.createElement('div');
-                bubble.classList.add('floating-bubble');
-                
-                // Posición, tamaño y velocidad aleatoria
-                let left = Math.random() * 100; // 0% a 100% vw
-                let duration = Math.random() * 12 + 8; // 8s a 20s
-                let delay = Math.random() * 10; // 0s a 10s
-                let size = Math.random() * 30 + 10; // 10px a 40px
-                
-                bubble.style.left = left + 'vw';
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.animationDuration = duration + 's';
-                bubble.style.animationDelay = delay + 's';
-                
-                container.appendChild(bubble);
-            }
-        }
-        
-        // Inicializar burbujas
-        createBubbles();
+        renderPages();
     </script>
 </body>
 </html>
