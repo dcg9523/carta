@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Ajuste clave para celulares -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Para Manu</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +16,7 @@
         .envelope-flap { transform-origin: top; transition: transform 0.8s ease-in-out; }
         
         .open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
-        .open .letter-container { transform: translateY(-80px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
+        .open .letter-container { transform: translateY(-60px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
         .open .envelope-wrapper { transform: translateY(150px); opacity: 0; pointer-events: none; transition: transform 1s ease-in-out 1.5s, opacity 1s 1.5s; }
         
         /* Animación del corazón latiendo */
@@ -27,8 +26,16 @@
         }
         .heart-seal { animation: heartbeat 2s infinite ease-in-out; cursor: pointer; }
         
-        /* Carta modo lectura (Ajuste de altura para que Safari no tape los botones) */
-        .reading-mode .letter-container { transform: translateY(0) scale(1); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); height: 72vh; width: 90vw; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        /* Carta modo lectura (Mucho más corta para esquivar la barra de Safari) */
+        .reading-mode .letter-container { 
+            transform: translateY(0) scale(1); 
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            height: 60vh; /* Altura muy reducida */
+            max-height: 480px;
+            width: 90vw; 
+            max-width: 500px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
         
         .page { display: none; opacity: 0; transition: opacity 0.5s; }
         .page.active { display: flex; opacity: 1; }
@@ -40,19 +47,16 @@
     <div id="envelope-scene" class="envelope-wrapper absolute z-50 flex flex-col items-center cursor-pointer w-full h-full justify-center" onclick="openEnvelope()">
         <p class="mb-6 text-gray-500 tracking-widest uppercase text-sm animate-pulse">Toca el corazón para abrir</p>
         <div class="envelope relative w-80 h-52 bg-white shadow-2xl rounded-sm border border-gray-100">
-            <!-- Solapa superior -->
             <div class="envelope-flap absolute top-0 left-0 w-0 h-0 border-l-[160px] border-r-[160px] border-t-[100px] border-transparent border-t-gray-100 z-30 drop-shadow-sm pointer-events-none"></div>
-            <!-- Sello de corazón -->
             <div class="heart-seal absolute top-[75px] w-full flex justify-center z-40 text-red-500 text-5xl drop-shadow-md">
                 ❤️
             </div>
-            <!-- Solapas laterales e inferior -->
             <div class="absolute inset-0 border-l-[160px] border-r-[160px] border-b-[110px] border-transparent border-b-white border-l-gray-50 border-r-gray-50 z-20 pointer-events-none"></div>
         </div>
     </div>
 
     <!-- Carta que sale del sobre -->
-    <div id="letter" class="letter-container absolute bg-white w-72 h-96 p-5 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100 mb-8">
+    <div id="letter" class="letter-container absolute bg-white w-72 h-80 p-5 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100">
         
         <!-- Contenido dinámico de las páginas -->
         <div id="pages-container" class="flex-grow flex flex-col justify-start text-gray-700 text-[14px] leading-relaxed relative overflow-hidden overflow-y-auto mb-2">
@@ -125,7 +129,6 @@
             }
         }
 
-        // Permitir deslizar con el dedo
         let touchStartX = 0;
         const letterElem = document.getElementById('letter');
         
@@ -135,8 +138,8 @@
         
         letterElem.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 40) nextPage(); // Swipe izquierda
-            if (touchEndX - touchStartX > 40) prevPage(); // Swipe derecha
+            if (touchStartX - touchEndX > 40) nextPage();
+            if (touchEndX - touchStartX > 40) prevPage();
         }, {passive: true});
 
         renderPages();
