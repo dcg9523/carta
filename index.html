@@ -10,7 +10,6 @@
         body { font-family: 'Lora', serif; background-color: #fcfcfc; overflow: hidden; margin: 0; padding: 0; }
         .cursive { font-family: 'Dancing Script', cursive; }
         
-        /* Animaciones del sobre */
         .envelope-wrapper { perspective: 1000px; transition: transform 0.8s ease-in-out; }
         .envelope { transition: transform 1s ease-in-out; transform-style: preserve-3d; }
         .envelope-flap { transform-origin: top; transition: transform 0.8s ease-in-out; }
@@ -19,19 +18,17 @@
         .open .letter-container { transform: translateY(-40px); opacity: 1; z-index: 60; transition: transform 1s ease-in-out 0.5s, opacity 0.5s 0.5s; }
         .open .envelope-wrapper { transform: translateY(150px); opacity: 0; pointer-events: none; transition: transform 1s ease-in-out 1.5s, opacity 1s 1.5s; }
         
-        /* Animación del corazón latiendo */
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.15); }
         }
         .heart-seal { animation: heartbeat 2s infinite ease-in-out; cursor: pointer; }
         
-        /* Carta modo lectura: Aún más corta y compacta para celulares */
         .reading-mode .letter-container { 
             transform: translateY(0) scale(1); 
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
-            height: 55vh; /* Altura súper reducida */
-            max-height: 400px; /* Límite máximo para que sea un cuadro compacto */
+            height: 55vh; 
+            max-height: 400px; 
             width: 90vw; 
             max-width: 500px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
@@ -43,7 +40,6 @@
 </head>
 <body class="h-screen w-screen flex items-center justify-center relative bg-[#fcfcfc]">
 
-    <!-- Pantalla inicial: Sobre cerrado -->
     <div id="envelope-scene" class="envelope-wrapper absolute z-50 flex flex-col items-center cursor-pointer w-full h-full justify-center" onclick="openEnvelope()">
         <p class="mb-6 text-gray-500 tracking-widest uppercase text-sm animate-pulse">Toca el corazón para abrir</p>
         <div class="envelope relative w-80 h-52 bg-white shadow-2xl rounded-sm border border-gray-100">
@@ -55,44 +51,41 @@
         </div>
     </div>
 
-    <!-- Carta que sale del sobre -->
     <div id="letter" class="letter-container absolute bg-white w-72 h-72 p-5 sm:p-8 rounded shadow-xl flex flex-col justify-between opacity-0 z-10 border border-gray-100 mb-12">
-        
-        <!-- Contenido dinámico de las páginas -->
         <div id="pages-container" class="flex-grow flex flex-col justify-start text-gray-700 text-[14px] leading-relaxed relative overflow-hidden overflow-y-auto mb-2">
-            <!-- Las páginas se insertan aquí vía JS -->
         </div>
-
-        <!-- Controles de navegación protegidos del fondo -->
         <div id="controls" class="hidden mt-2 justify-between items-center border-t border-gray-100 pt-3 pb-1 flex-shrink-0 bg-white">
             <button onclick="prevPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">&larr; Anterior</button>
-            <span id="page-indicator" class="text-xs text-gray-300 font-bold">1 / 10</span>
+            <span id="page-indicator" class="text-xs text-gray-300 font-bold">1 / 12</span>
             <button onclick="nextPage()" class="text-gray-400 hover:text-red-500 px-3 py-2 font-semibold transition text-sm active:bg-gray-50 rounded">Siguiente &rarr;</button>
         </div>
     </div>
 
     <script>
-        // Texto dividido en 10 páginas cortas
         const pages = [
-            `<strong>Manu &lt;3,</strong><br><br>Sabes que puedo ser mejor con las letras que con el verbo. Ayer te sentí distante y como que no querías contarme nada más de tu vida.<br><br>Llevo escribiendo esto 5 días en mi cabeza, tratando de poner todos mis pensamientos en un mensaje directo para poder expresar lo que siento por ti, y trataré de hacerlo de la manera más honesta posible.`,
+            `<strong>Manu &lt;3,</strong><br><br>Sabes que puedo ser mejor con las letras que con el verbo. Ayer te sentí distante y como que no querías contarme nada más de tu vida.<br><br>Llevo escribiendo esto 5 días en mi cabeza, tratando de poner todos mis pensamientos en un mensaje directo, para poder expresar lo que siento por ti y trataré de hacerlo de la manera más honesta posible.`,
             
-            `Si llegas aquí y definitivamente durante estos días has pensado que no soy una persona que quieras en tu vida, lo entiendo; reacciona a este mensaje con un corazón negro, lo entenderé y me haré a un lado.<br><br>Si decides no reaccionar con el corazón negro, esto es lo que te quiero decir: Creo que hace ya 5 años no pasaba días tan grises; mi cabeza a 1000 revoluciones, la sensación de que algo me falta...`,
+            `Si llegas aquí y definitivamente durante estos días has pensado que no soy una persona que quieras en tu vida lo entiendo, y reacciona a este mensaje con un corazón negro, lo entenderé y me haré a un lado.<br><br>Si decides no reaccionar con el corazón negro esto es lo que te quiero decir: Creo que hace ya 5 años no pasaba días tan grises, mi cabeza a 1000 revoluciones, la sensación de que algo me falta, la incertidumbre y muchas otras cosas, que no son el foco de esto, pero ahí están.`,
             
-            `Cuando me dices que estás bien me alegro de corazón porque no quiero menos para ti, pero mi corazón duele de solo pensar que tal vez ya estés creando un mecanismo para olvidarme a pasos agigantados...<br><br>Cuando hablaste el miércoles en pasado: “me imaginé, sí quería, mis planes eran…”, eso me devastó. Pero yo sí te lo quiero decir: NO QUIERO TENERTE LEJOS UN SEGUNDO MÁS.`,
+            `Cuando me dices que estás bien me alegro de corazón porque no quiero menos para ti, pero mi corazón duele de solo pensar que tal vez ya estés creando tu mecanismo que me esté olvidando a pasos agigantados o que en este tiempo te dieras cuenta que no soy la persona que quieres a tu lado, que puede ser posible, porque eres más de acciones y nunca me dijiste que no querías que me fuera...`,
             
-            `Tampoco quiero esperar a que una vida contigo sea el sueño o la oportunidad de alguien más, porque ya estoy aquí.<br><br>Yo sé que la cagué y que tengo tanto por mejorar, pero yo no quiero hablar en pasado. Yo sí quiero comprar un apto, pero vivir contigo; yo sí quiero un carro para pasear y disfrutar contigo; yo sí quiero tener a Alicia, pero contigo.`,
+            `...cuando hablaste el miércoles en pasado “me imaginé, si quería, mis planes eran…” Eso me devastó, pero yo sí te lo quiero decir, NO QUIERO TENERTE LEJOS UN SEGUNDO MÁS, y tampoco quiero esperar a que una vida contigo sea el sueño o la oportunidad de alguien más, porque ya estoy aquí.`,
             
-            `Sí quiero despertar cada mañana y ver esa carita preciosa que tienes, verte estirar y lanzarme esa sonrisa pícara que tienes mientras me dices "buenos días, amorcito"; sí quiero ver ese espectacular cabello multicolor y esos ojos cafés intensos diariamente.<br><br>Sí quiero hacerte el amor todos los días, sí quiero que me toques cuando mis vecinos nos están mirando...`,
+            `Yo sé que la cagué y que tengo tanto por mejorar, pero yo no quiero hablar en pasado, yo sí quiero comprar un apto, pero vivir contigo, yo sí quiero un carro para pasear y disfrutar contigo, yo sí quiero tener a Alicia, pero contigo, sí quiero ser exitoso y rico para compartir todo contigo, sí quiero despertar cada mañana y ver esa carita preciosa que tienes, verte estirar y lanzarme esa sonrisa pícara que tienes mientras me dices buenos días amorcito...`,
             
-            `Sí quiero ir a la tienda tomando tu mano y escuchar “amorcito, me porté muy bien hoy y creo que me merezco un dulcecito”. Sí quiero escribir más páginas en tu libreta, sí quiero que me mandes reels imaginándonos una vida juntos.<br><br>Sí quiero ser la persona a la que acudas cuando estás feliz o triste; sí quiero admirar tu nariz, tu rostro, tu cabello, tu ser.`,
+            `...sí quiero ver ese espectacular cabello multicolor y esos ojos café intenso diariamente, por los cuales los míos se inundan de amor, sí quiero hacerte el amor todos los días, sí quiero que me toques cuando mis vecinos nos están mirando, sí quiero ir a la tienda tomando tu mano y escuchar “amorcito, me porté muy bien hoy y creo que me merezco un dulcecito” mientras me haces un puchero, sí quiero escribir más páginas en tu libreta de apuntes, sí quiero que me mandes reels a Instagram divertidos y lindos e imaginándonos una vida juntos...`,
             
-            `Sí quiero ser la persona con la cual disfrutas hablar, reír, bailar, ir al supermercado, ir a un concierto, o simplemente estar cerca sin hablar. Sí quiero ser tu amorcete, tu cielo, tu mejor amigo, tu novio, tu esposo... El amor de tu vida.<br><br>Sé que te hice daño con mi falta de comunicación, desconfianza y celos, pero durante estos días me he dado cuenta de que puedo, quiero y voy a cambiar.`,
+            `...sí quiero ser la persona a la que acudas cuando estás feliz o triste, sí quiero poder abrir mis ojos y admirar tu nariz, tu rostro, tus cejas, tu cabello, tu piel, tus labios, tus senos, tus nalgas, tu ser. Sí quiero ser la persona con la cual disfrutas hablar, reír, bailar, ir al supermercado, ir a un concierto, comer, o simplemente estar cerca, sin hablar, y con la que te sientes segura. Sí quiero ser tu amorcete, tu cielo, tu mejor amigo, tu novio, tu esposo, tu confidente en los días malos y buenos, y si llegaste hasta aquí y me permites ser pretencioso y egoísta… El amor de tu vida.`,
             
-            `No quiero mi felicidad ni tu felicidad por separado, quiero que todo sea nuestra felicidad, y que no nos preguntemos más "¿qué somos?". Me cansé de sentir temor, distancias y silencios innecesarios.<br><br>Yo lo que quiero es apostarlo todo aquí y ahora. Así tu familia diga que soy un tonto por haber hecho lo que hice, yo quiero estar contigo y solo contigo.`,
+            `Sé que te hice daño de alguna manera con mis obsesiones y por mi falta de comunicación y carácter, por mi desconfianza y mis celos, que no puedo prometer que no vaya a ser celoso nunca, o que no me vayan a molestar actitudes y palabras, que no me va a molestar que haya gente del pasado cerca, o que desconfíe de las intenciones de otras personas, pero nunca de las tuyas...<br><br>...pero estas son cosas que están conmigo, que durante estos días me he dado cuenta que puedo, quiero y voy a cambiar, porque para mí eres la persona más valiosa que he podido encontrar en todos mis años en búsqueda de mi amor bonito (yo sé que soy muy cursi a veces).`,
             
-            `Cada "te amo", cada "te admiro", cada "estás preciosa", han sido desde mi total honestidad y amor. Ayer salí y cada lugar que recorrí solo podía imaginármelo contigo; comí ramen y te quería a mi lado... Y mi corazón se acelera porque en verdad quiere que tú pienses lo mismo.<br><br>Quiero estar a tu lado desde el respeto, la reciprocidad, la confianza y la claridad.`,
+            `Sí, hablaré y preguntaré y me expresaré en los momentos correctos, y si tú llegaste hasta este punto son cosas que si decides no abandonar el bote lo podemos hablar todo.<br><br>No quiero mi felicidad ni tu felicidad por separado, quiero que todo sea nuestra felicidad, y que cuando las cosas se pongan complejas no preguntemos nunca más, ¿qué somos? porque la única respuesta a eso espero que sea eso, somos.`,
             
-            `Manuela Ríos, te amo demasiado. Esta semana me diagnostiqué y soy alejado-de-Manuela-fóbico; y eres la cura para mi alma, eso ya lo entendí. No me tienes que dar una respuesta inmediata, pero sí quiero saber lo que pasa por tu mente cuando estés lista.<br><br><span class="text-red-500 font-bold text-center block my-4 cursive text-lg sm:text-xl leading-tight">TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO</span><br>Y si llegaste hasta aquí, eres el amor de mi vida.`
+            `No quiero que pienses solo en mí, quiero que pienses en ti y en nosotros, me cansé de sentir temor, me cansé de fingir espacios, distancias y silencios innecesarios, yo lo que quiero es apostarlo todo aquí y ahora, así Valentina me esté odiando, así Daniel me esté odiando, así tu familia diga que soy un tonto por haber hecho lo que hice, yo quiero estar contigo y solo contigo, lo demás lo arreglo después.`,
+            
+            `Cada te amo, cada te admiro, cada estás preciosa, cada no me interesa nadie más, cada ¿estás bien?, cada ¿ya comiste?, cada ¿pediste la cita?, cada no necesario, cada y si haces esto han sido desde mi total honestidad y amor, yo no pretendo controlar tu vida, ni tus finanzas, ni nada, yo lo único que quiero es estar para hacerte la vida más sencilla si está a mi alcance.<br><br>Ayer salí y cada lugar que recorrí solo podía imaginármelo contigo, comí ramen y te quería a mi lado, fui a un lugar espectacular que quisiera ir contigo, hablé con mis amigos de ti y de lo mucho que te extraño y de lo mucho que quiero estar contigo… Y mi corazón se acelera porque en verdad quiere que tú pienses lo mismo.`,
+            
+            `Yo creo que la intención de esta 4ta carta que te he escrito está clara y tengo muchas más letras que quiero compartir pero en el transcurso de la vida; quiero estar a tu lado desde el respeto, el amor, la reciprocidad, la confianza y la claridad, pero todo esto solo son mis palabras, quisiera conocer las tuyas, que no tiene que ser ya, pero si a esto reaccionas con un corazón blanco entenderé que al menos quieres pensarlo o si me contestas con un “si, lo quiero pensar” también me ayuda a saber qué debo hacer.<br><br>Manuela Ríos, te amo demasiado, no te alcanzas a imaginar cuánto… Esta semana me diagnostiqué y soy alejadodemanuela fóbico, creo que ese es el término médico, y eres la cura para mi alma, y eso ya lo entendí. Como dije, no me tienes que dar una respuesta inmediata, pero sí quiero saber lo que pasa por tu mente cuando quieras decírmelo y estés lista.<br><br><span class="text-red-500 font-bold text-center block my-4 cursive text-lg sm:text-xl leading-tight">TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO TE AMO</span><br>Y si llegaste hasta aquí, eres el amor de mi vida y gracias por leerme.`
         ];
 
         let currentPage = 0;
@@ -109,7 +102,6 @@
 
         function openEnvelope() {
             if(document.body.classList.contains('open')) return; 
-            
             document.body.classList.add('open');
             setTimeout(() => {
                 document.body.classList.add('reading-mode');
